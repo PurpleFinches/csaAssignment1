@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 
@@ -16,13 +17,31 @@ int main() {
     while (1) {
         std::cout << "Enter the type of number you will be inputting: ";
         std::getline(std::cin, numType);
+        std::transform(numType.begin(), numType.end(), numType.begin(),
+                       ::toupper);
+
+        std::cout << "value: " << numType << "\n";
 
         if (numType == "help") {
             helpDoc();
-        }
-    }
+        } else {
+            std::cout << "Enter a number: ";
+            std::cin >> userNum;
+            std::cout << "\nDEBUG: You entered " << userNum << ".";
+        };
 
-    return 0;
+        if (numType == "DEC") {
+
+        } else if (numType == "BIN") {
+            std::cout << "DEBUG: BIN\n";
+        } else if (numType == "HEX") {
+            std::cout << "DEBUG: HEX\n";
+        } else if (numType == "FLT") {
+            std::cout << "DEBUG: FLT\n";
+        }
+
+        return 0;
+    }
 }
 
 void helpDoc() {

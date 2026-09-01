@@ -1,24 +1,40 @@
 #include <iostream>
 #include <string>
 
+void helpDoc();
+
 int main() {
     std::string numType;
     int userNum;
 
-    std::cout << "This program takes a value (Decimal/Binary/Hex/Float) and\n"
+    std::cout << "-------------------------------------------------------\n"
+              << "This program takes a value (Decimal/Binary/Hex/Float) and\n"
               << "converts it to another value type of the user's choice.\n"
-              << "For help, type \"help\" in any input box.\n";
+              << "For help, type \"help\" in any input box.\n"
+              << "-------------------------------------------------------\n";
 
-    while (0) {
+    while (1) {
         std::cout << "Enter the type of number you will be inputting: ";
         std::getline(std::cin, numType);
 
         if (numType == "help") {
-            std::cout << "Returns the help doc.";
+            helpDoc();
         }
-
-        std::cout << "You entered: " << value << ".\n";
     }
 
     return 0;
+}
+
+void helpDoc() {
+    std::cout << "-------------------------------------------------------\n"
+              << "This converter takes a value and converts it to another\n"
+              << "value type of the user's choice. Valid inputs for number "
+                 "type are:\n"
+              << "Decimal: 'DEC'\n"
+              << "Binary: 'BIN'\n"
+              << "Hex: 'HEX'\n"
+              << "Float: 'FLT'\n"
+              << "Enter any three-character input when prompted for the number "
+                 "type.\n"
+              << "-------------------------------------------------------\n";
 }

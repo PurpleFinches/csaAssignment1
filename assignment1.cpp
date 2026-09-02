@@ -76,6 +76,8 @@ void helpDoc() {
             << "-------------------------------------------------------\n";
 }
 
+// this function converts all input from the user into a decimal to simplify
+// conversion to another type later on.
 double standardizeUserNum(const std::string &numType, double userNum) {
   // If user's input is decimal, then just return the same number and move on.
   if (numType == "D" || numType == "DEC") {
@@ -86,6 +88,7 @@ double standardizeUserNum(const std::string &numType, double userNum) {
       return userNum;
     }
 
+    // Covnersion from binary to decimal works by
     std::string binaryVal = std::to_string(userNum);
     int decVal = 0;
     int base = 1;
@@ -106,6 +109,8 @@ double standardizeUserNum(const std::string &numType, double userNum) {
   }
 }
 
+// This is the second step of conversion. Once the initial number is converted
+// to decimal, this function will convert it into the desired value.
 std::string convertNumType(const std::string &numType,
                            const std::string &convertType, double userNum) {
   int convertedVal = standardizeUserNum(numType, userNum);

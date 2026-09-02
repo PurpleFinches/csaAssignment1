@@ -1,12 +1,22 @@
+// See my GitHub Repo for commit history.
+//
+// This was NOT written with ANY help from AI in ANY shape or form, neither for
+// code completion nor for teaching. I haven't coded in C++ in about eight
+// months, so I wanted to see how far I could get just on memory (and some of my
+// old repo snippets) alone.
+
 #include <algorithm>
 #include <iostream>
 #include <limits>
 #include <string>
 
 void helpDoc();
+double standardizeUserNum(const std::string &, const std::string &, int);
+double convertNumType(const std::string &, const std::string &, int);
 
 int main() {
   std::string numType;
+  std::string convertType;
   int userNum;
 
   std::cout << "-------------------------------------------------------\n"
@@ -33,19 +43,17 @@ int main() {
         std::cout << "Invalid input. Provide a valid number.\n";
         std::cout << "Enter a number: ";
       }
+      // Not prompting for input, skipping over. Something must already be in
+      // the stream
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      std::cout << "Enter the type of number you will be converting to: ";
+      std::getline(std::cin, convertType);
+      std::transform(convertType.begin(), convertType.end(),
+                     convertType.begin(), ::toupper);
     }
 
-    if (numType == "DEC" || numType == "D") {
-      std::cout << "DEBUG: DEC\n";
-    } else if (numType == "BIN" || numType == "B") {
-      std::cout << "DEBUG: BIN\n";
-    } else if (numType == "HEX" || numType == "H") {
-      std::cout << "DEBUG: HEX\n";
-    } else if (numType == "FLT" || numType == "F") {
-      std::cout << "DEBUG: FLT\n";
-    }
-
-    return 0;
+    std::cout << "Converted Number: "
+              << convertNumType(numType, convertType, userNum) << std::endl;
   }
 }
 
@@ -62,4 +70,28 @@ void helpDoc() {
       << "Enter any one or three-character input when prompted for the number "
          "type.\n"
       << "-------------------------------------------------------\n";
+}
+
+double standardizeUserNum(const std::string &numType,
+                          const std::string &convertType, int userNum) {
+  if ((numType == "D" || numType == "DEC") &&
+      (convertType == "D" || convertType == "DEC")) {
+    return userNum;
+  } else {
+  };
+}
+
+double convertNumType(const std::string &numType,
+                      const std::string &convertType, int userNum) {
+  double convertedVal = standardizeUserNum(numType, convertType, userNum);
+
+  if (numType == "D" || numType == "DEC") {
+    return convertedVal;
+  } else if (numType == "B" || numType == "BIN") {
+  } else if (numType == "H" || numType == "HEX") {
+  } else if (numType == "F" || numType == "FLT") {
+  } else {
+    std::cout << "Invalid conversion." << std::endl;
+    return 0;
+  }
 }

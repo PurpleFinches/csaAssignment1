@@ -47,13 +47,9 @@ int main() {
       continue;
     } else {
       std::cout << "Enter a value: ";
-      std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       std::getline(std::cin, userNum);
     }
 
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cout << "Enter the type of number you will be converting to: ";
     std::getline(std::cin, convertType);
     std::transform(convertType.begin(), convertType.end(), convertType.begin(),
@@ -120,7 +116,7 @@ std::string convertNumType(const std::string &numType,
                            const std::string &convertType,
                            std::string &userNum) {
   std::string convertedVal = standardizeUserNum(numType, userNum);
-  int convertedDblVal = std::stod(convertedVal);
+  int convertedDblVal = std::stoi(convertedVal);
 
   // Converts everything to strings for the return. If value is 0, then it
   // returns 0.
@@ -160,7 +156,6 @@ std::string convertNumType(const std::string &numType,
     } else if (convertedDblVal == 0) {
       return std::to_string(0);
     } else {
-      std::cout << "ConvertedVal is: " << convertedVal << std::endl;
       char hexDecVal[100];
       std::string hexVal;
       int i = 0;

@@ -11,11 +11,15 @@
 // wanted. My first idea was to use four separate functions (convertToDec,
 // convertToBin, etc.) that did checks for the user's input type, but realized
 // that I'd be writing four near-identical if-else statements. This felt like
-// the cleaner route.
+// the cleaner route. I'm not sure if it was.
+
+// TO DO:
+// Decimal to Hex
+// Float Functionality (Float to Float and Float to Binary Only)
+//
 
 #include <algorithm>
 #include <iostream>
-#include <limits>
 #include <string>
 
 void helpDoc();
@@ -81,12 +85,19 @@ std::string standardizeUserNum(const std::string &numType,
   if (numType == "D" || numType == "DEC") {
     return userNum;
     //
+    // If user's input is binary, then convert to decimal.
   } else if (numType == "B" || numType == "BIN") {
     if (userNum == "0") {
       return userNum;
     }
 
-    // Covnersion from binary to decimal works by
+    // Conversion from binary to decimal works by starting from the furthest
+    // right digit, then adding the base to the decVal if the digit is 1. The
+    // base is doubled for the next position and so on until the decimal value
+    // is formed. It is essentially just multiplying the bases the same way you
+    // would on paper, where 1001 would be 1 + 0 + 0 + 8 = 9. By multiplying
+    // each base by 2, you can then decide whether that next base needs to be
+    // added.
     std::string binaryVal = userNum;
     int decVal = 0;
     int base = 1;
@@ -99,6 +110,7 @@ std::string standardizeUserNum(const std::string &numType,
     }
 
     return std::to_string(decVal);
+    // Hex to decimal
   } else if (numType == "H" || numType == "HEX") {
     int decVal = 0;
     int base = 1;

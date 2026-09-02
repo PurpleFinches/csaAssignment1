@@ -90,7 +90,6 @@ double standardizeUserNum(const std::string &numType, double userNum) {
         decVal += baseVal;
       }
     }
-
     return decVal;
   } else if (numType == "H" || numType == "HEX") {
     return 0;
@@ -142,7 +141,34 @@ std::string convertNumType(const std::string &numType,
     } else if (convertedVal == 0) {
       return std::to_string(0);
     } else {
-      return "ok";
+      char hexDecVal[100];
+      std::string hexVal;
+      int i = 0;
+
+      // While our user number is greater than 0, the userNum is divided by 16
+      // and the remainder converted into a corresponding hex character. If the
+      // remainder is greater than 10, as in 156 % 16 = 12, then 12 - 10 is
+      // added to the value 'A' to create the second value of 156's hex code, C.
+      // In the second value, the remainder is now less than 10 (9), so it is
+      // added to 0 to get the second value. Since these values are in reverse
+      // order, though, a for-loop exists at the end to reverse the values (9C),
+      // then return them.
+      while (convertedVal != 0) {
+        int rem = convertedVal % 16;
+
+        if (rem < 10) {
+          hexDecVal[i] = '0' + rem;
+        } else {
+          hexDecVal[i] = 'A' + (rem - 10);
+        }
+        i++;
+        convertedVal /= 16;
+      }
+
+      for (int j = i - 1; j >= 0; j--) {
+        hexVal += hexDecVal[j];
+      }
+      return hexVal;
     }
   } else {
     std::cout << "Invalid conversion." << std::endl;

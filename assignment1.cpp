@@ -1,9 +1,8 @@
 // This was NOT written with ANY help from AI in ANY shape or form, neither for
-// code completion nor for teaching. I've somehow managed to avoid programming
-// in my entire 10 year IT career and haven't coded in C++ in about eight
-// months, so I wanted to see how far I could get just on memory (and some of my
-// old repo snippets) alone. I did use some online resources like Stack
-// Overflow, and GFG for the conversions.
+// code completion nor for teaching. I don't code often so I wanted to see how
+// far I could get just on memory (and some of my old repo snippets) alone. I
+// used some online resources like Stack Overflow and GFG for the
+// conversion help.
 
 // I decided the easiest way to do this would be to first convert the user's
 // input to decimal, then convert the decimal number to whatever format they
@@ -13,8 +12,7 @@
 // the cleaner route. I'm not sure if it was.
 
 // TO DO:
-// Float Functionality (Float to Float and Float to Binary Only)
-//
+// Float Functionality (Float to Binary)
 
 #include <algorithm>
 #include <iostream>
@@ -77,8 +75,8 @@ void helpDoc() {
             << "-------------------------------------------------------\n";
 }
 
-// this function converts all input from the user into DECIMAL to (hopefully)
-// simplify conversion to another type later on.
+// this function converts all input from the user into DECIMAL to then simplify
+// conversion to another type later on.
 std::string standardizeUserNum(const std::string &numType,
                                std::string &userNum) {
   // If user's input is decimal, then just return the same number and move on.
@@ -151,11 +149,11 @@ std::string convertNumType(const std::string &numType,
                            std::string &userNum) {
   std::string convertedVal = standardizeUserNum(numType, userNum);
   int convertedDblVal = std::stoi(convertedVal);
-
-  // Converts everything to strings for the return. If value is 0, then it
-  // returns 0.
+  // Decimals are not converted and instead returned in-place.
   if (convertType == "D" || convertType == "DEC") {
     return convertedVal;
+    // Binary conversion. If Binary -> Binary or equal to 0, then it is not
+    // converted and instead returned directly from user input.
   } else if (convertType == "B" || convertType == "BIN") {
     if (numType == "B" || numType == "BIN") {
       return userNum;
@@ -176,7 +174,7 @@ std::string convertNumType(const std::string &numType,
         i++;
       }
 
-      // Stores the values calcualted from the while loop in reverse order
+      // Stores the values calcualted from the while loop in reverse order.
       for (int j = i - 1; j >= 0; j--) {
         binVal += std::to_string(binArr[j]);
       }
@@ -184,6 +182,7 @@ std::string convertNumType(const std::string &numType,
       return binVal;
     }
 
+    // Hex has the same initial logic as previous functions.
   } else if (convertType == "H" || convertType == "HEX") {
     if (numType == "H" || numType == "HEX") {
       return userNum;

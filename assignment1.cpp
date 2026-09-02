@@ -43,8 +43,6 @@ int main() {
         std::cout << "Invalid input. Provide a valid number.\n";
         std::cout << "Enter a number: ";
       }
-      // Not prompting for input, skipping over. Something must already be in
-      // the stream
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       std::cout << "Enter the type of number you will be converting to: ";
       std::getline(std::cin, convertType);

@@ -1,11 +1,10 @@
-// See my GitHub Repo for commit history.
-//
 // This was NOT written with ANY help from AI in ANY shape or form, neither for
-// code completion nor for teaching. I haven't coded in C++ in about eight
+// code completion nor for teaching. I've somehow managed to avoid programming
+// in my entire 10 year IT career and haven't coded in C++ in about eight
 // months, so I wanted to see how far I could get just on memory (and some of my
 // old repo snippets) alone. I did use some online resources like Stack
-// Overflow.
-//
+// Overflow, and GFG for the conversions.
+
 // I decided the easiest way to do this would be to first convert the user's
 // input to decimal, then convert the decimal number to whatever format they
 // wanted. My first idea was to use four separate functions (convertToDec,
@@ -52,6 +51,8 @@ int main() {
     } else {
       std::cout << "Enter a value: ";
       std::getline(std::cin, userNum);
+      std::transform(userNum.begin(), userNum.end(), userNum.begin(),
+                     ::toupper);
     }
 
     std::cout << "Enter the type of number you will be converting to: ";
@@ -77,14 +78,13 @@ void helpDoc() {
             << "-------------------------------------------------------\n";
 }
 
-// this function converts all input from the user into a decimal to simplify
-// conversion to another type later on.
+// this function converts all input from the user into DECIMAL to (hopefully)
+// simplify conversion to another type later on.
 std::string standardizeUserNum(const std::string &numType,
                                std::string &userNum) {
   // If user's input is decimal, then just return the same number and move on.
   if (numType == "D" || numType == "DEC") {
     return userNum;
-    //
     // If user's input is binary, then convert to decimal.
   } else if (numType == "B" || numType == "BIN") {
     if (userNum == "0") {
@@ -110,15 +110,30 @@ std::string standardizeUserNum(const std::string &numType,
     }
 
     return std::to_string(decVal);
-    // Hex to decimal
+    // Conversion from Hexadecimal to decimal uses
   } else if (numType == "H" || numType == "HEX") {
     int decVal = 0;
     int base = 1;
-    return "ok";
+    std::string hexVal = userNum;
 
+    for (int i = hexVal.length() - 1; i >= 0; i--) {
+      int digit;
+
+      if (hexVal[i] >= '0' && hexVal[i] <= '9') {
+        digit = hexVal[i] - '0';
+      } else if (hexVal[i] >= 'A' && hexVal[i] <= 'F') {
+        digit = hexVal[i] - 'A' + 10;
+      } else {
+        continue;
+      }
+
+      decVal += digit * base;
+      base *= 16;
+    }
+
+    return std::to_string(decVal);
   } else {
-    std::cout << "Invalid Conversion." << std::endl;
-    return "0";
+    return "INVALID CONVERSION. Type 'help' to see valid type inputs.";
   }
 }
 

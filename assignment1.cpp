@@ -70,24 +70,28 @@ void helpDoc() {
       << "-------------------------------------------------------\n";
 }
 
-double standardizeUserNum(const std::string &numType,
-                          const std::string &convertType, int userNum) {
-  if ((numType == "D" || numType == "DEC") &&
-      (convertType == "D" || convertType == "DEC")) {
+double standardizeUserNum(const std::string &numType, int userNum) {
+  if (numType == "D" || numType == "DEC") {
     return userNum;
+  } else if (numType == "B" || numType == "BIN") {
+
+  } else if (numType == "H" || numType == "HEX") {
+
+  } else if (numType == "F" || numType == "FLT") {
   } else {
-  };
+    std::cout << "Invalid Conversion." << std::endl;
+  }
 }
 
 double convertNumType(const std::string &numType,
                       const std::string &convertType, int userNum) {
   double convertedVal = standardizeUserNum(numType, convertType, userNum);
 
-  if (numType == "D" || numType == "DEC") {
+  if (convertType == "D" || convertType == "DEC") {
     return convertedVal;
-  } else if (numType == "B" || numType == "BIN") {
-  } else if (numType == "H" || numType == "HEX") {
-  } else if (numType == "F" || numType == "FLT") {
+  } else if (convertType == "B" || convertType == "BIN") {
+  } else if (convertType == "H" || convertType == "HEX") {
+  } else if (convertType == "F" || convertType == "FLT") {
   } else {
     std::cout << "Invalid conversion." << std::endl;
     return 0;

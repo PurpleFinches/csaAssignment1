@@ -19,13 +19,15 @@
 #include <string>
 
 void helpDoc();
-double standardizeUserNum(const std::string &, const std::string &, double);
-std::string convertNumType(const std::string &, const std::string &, double);
+double standardizeUserNum(const std::string &, const std::string &,
+                          std::string &);
+std::string convertNumType(const std::string &, const std::string &,
+                           std::string &);
 
 int main() {
   std::string numType;
   std::string convertType;
-  int userNum;
+  std::string userNum;
 
   std::cout << "-------------------------------------------------------\n"
             << "This program takes a value (Decimal/Binary/Hex/Float) and\n"
@@ -44,19 +46,18 @@ int main() {
       helpDoc();
       continue;
     } else {
-      std::cout << "Enter a number: ";
-      while (!(std::cin >> userNum)) {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "Invalid input. Provide a valid number.\n";
-        std::cout << "Enter a number: ";
-      }
+      std::cout << "Enter a value: ";
+      std::cin.clear();
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      std::cout << "Enter the type of number you will be converting to: ";
-      std::getline(std::cin, convertType);
-      std::transform(convertType.begin(), convertType.end(),
-                     convertType.begin(), ::toupper);
+      std::getline(std::cin, userNum);
     }
+
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Enter the type of number you will be converting to: ";
+    std::getline(std::cin, convertType);
+    std::transform(convertType.begin(), convertType.end(), convertType.begin(),
+                   ::toupper);
 
     std::cout << "Converted Number: "
               << convertNumType(numType, convertType, userNum) << std::endl;
@@ -78,18 +79,19 @@ void helpDoc() {
 
 // this function converts all input from the user into a decimal to simplify
 // conversion to another type later on.
-double standardizeUserNum(const std::string &numType, double userNum) {
+std::string standardizeUserNum(const std::string &numType,
+                               std::string &userNum) {
   // If user's input is decimal, then just return the same number and move on.
   if (numType == "D" || numType == "DEC") {
     return userNum;
     //
   } else if (numType == "B" || numType == "BIN") {
-    if (userNum == 0) {
+    if (userNum == "0") {
       return userNum;
     }
 
     // Covnersion from binary to decimal works by
-    std::string binaryVal = std::to_string(userNum);
+    std::string binaryVal = userNum;
     int decVal = 0;
     int base = 1;
 
@@ -100,29 +102,34 @@ double standardizeUserNum(const std::string &numType, double userNum) {
       base *= 2;
     }
 
-    return decVal;
+    return std::to_string(decVal);
   } else if (numType == "H" || numType == "HEX") {
-    return 0;
+    int decVal = 0;
+    int base = 1;
+    return "ok";
+
   } else {
     std::cout << "Invalid Conversion." << std::endl;
-    return 0;
+    return "0";
   }
 }
 
 // This is the second step of conversion. Once the initial number is converted
 // to decimal, this function will convert it into the desired value.
 std::string convertNumType(const std::string &numType,
-                           const std::string &convertType, double userNum) {
-  int convertedVal = standardizeUserNum(numType, userNum);
+                           const std::string &convertType,
+                           std::string &userNum) {
+  std::string convertedVal = standardizeUserNum(numType, userNum);
+  int convertedDblVal = std::stod(convertedVal);
 
   // Converts everything to strings for the return. If value is 0, then it
   // returns 0.
   if (convertType == "D" || convertType == "DEC") {
-    return std::to_string(convertedVal);
+    return convertedVal;
   } else if (convertType == "B" || convertType == "BIN") {
     if (numType == "B" || numType == "BIN") {
-      return std::to_string((int)userNum);
-    } else if (convertedVal == 0) {
+      return userNum;
+    } else if (convertedDblVal == 0) {
       return std::to_string(0);
     } else {
 
@@ -133,9 +140,9 @@ std::string convertNumType(const std::string &numType,
       // After initializing an array, we devide the user input by 2 and add it
       // to an array of binArr. The remainder is stored, then the user input is
       // divided by 2 until the convertedVal equals 0.
-      while (convertedVal > 0) {
-        binArr[i] = convertedVal % 2;
-        convertedVal /= 2;
+      while (convertedDblVal > 0) {
+        binArr[i] = convertedDblVal % 2;
+        convertedDblVal /= 2;
         i++;
       }
 
@@ -149,8 +156,8 @@ std::string convertNumType(const std::string &numType,
 
   } else if (convertType == "H" || convertType == "HEX") {
     if (numType == "H" || numType == "HEX") {
-      return std::to_string(userNum);
-    } else if (convertedVal == 0) {
+      return userNum;
+    } else if (convertedDblVal == 0) {
       return std::to_string(0);
     } else {
       std::cout << "ConvertedVal is: " << convertedVal << std::endl;
@@ -166,8 +173,8 @@ std::string convertNumType(const std::string &numType,
       // added to 0 to get the second value. Since these values are in reverse
       // order, though, a for-loop exists at the end to reverse the values (9C),
       // then return them.
-      while (convertedVal != 0) {
-        int rem = convertedVal % 16;
+      while (convertedDblVal != 0) {
+        int rem = convertedDblVal % 16;
 
         if (rem < 10) {
           hexDecVal[i] = '0' + rem;
@@ -175,7 +182,7 @@ std::string convertNumType(const std::string &numType,
           hexDecVal[i] = 'A' + (rem - 10);
         }
         i++;
-        convertedVal /= 16;
+        convertedDblVal /= 16;
       }
 
       for (int j = i - 1; j >= 0; j--) {

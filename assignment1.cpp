@@ -13,7 +13,6 @@
 // the cleaner route. I'm not sure if it was.
 
 // TO DO:
-// Decimal to Hex
 // Float Functionality (Float to Float and Float to Binary Only)
 //
 
@@ -110,7 +109,15 @@ std::string standardizeUserNum(const std::string &numType,
     }
 
     return std::to_string(decVal);
-    // Conversion from Hexadecimal to decimal uses
+    // Conversion from Hexadecimal to decimal works by first checking each value
+    // from right-to-left. At the first (rightmost) value, the character is
+    // converted into a digit. For values 0-9, it's converted from a string to
+    // integer format. If the character is a value A - F, it is converted
+    // into a value between 10 - 15. The digit is then multiplied by the
+    // base and added to the decimal value, and the base is multiplied by 16
+    // before doing the same operations on the next value. (This is the same as
+    // it normally works on paper, where you multiply each digit by 16 raised to
+    // the power of its position.)
   } else if (numType == "H" || numType == "HEX") {
     int decVal = 0;
     int base = 1;

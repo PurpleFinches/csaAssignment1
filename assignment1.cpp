@@ -82,14 +82,21 @@ double standardizeUserNum(const std::string &numType, double userNum) {
     return userNum;
     //
   } else if (numType == "B" || numType == "BIN") {
-    int decVal = 0;
-    int baseVal = 1;
-
-    for (int i = std::to_string(userNum).length() - 1; i >= 0; i--) {
-      if (std::to_string(userNum)[i] == '1') {
-        decVal += baseVal;
-      }
+    if (userNum == 0) {
+      return userNum;
     }
+
+    std::string binaryVal = std::to_string(userNum);
+    int decVal = 0;
+    int base = 1;
+
+    for (int i = binaryVal.length() - 1; i >= 0; i--) {
+      if (binaryVal[i] == '1') {
+        decVal += base;
+      }
+      base *= 2;
+    }
+
     return decVal;
   } else if (numType == "H" || numType == "HEX") {
     return 0;
@@ -141,6 +148,7 @@ std::string convertNumType(const std::string &numType,
     } else if (convertedVal == 0) {
       return std::to_string(0);
     } else {
+      std::cout << "ConvertedVal is: " << convertedVal << std::endl;
       char hexDecVal[100];
       std::string hexVal;
       int i = 0;

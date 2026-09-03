@@ -160,26 +160,58 @@ std::string convertNumType(const std::string &numType,
     } else if (convertedDblVal == 0) {
       return std::to_string(0);
     } else {
-
-      int binArr[32];
       std::string binVal;
+      int binArr[32];
+      int fracArr[32];
       int i = 0;
 
+      // Separate everything before and after the decimal
+      size_t pos = convertedVal.find('.');
+      std::string baseVal = convertedVal.substr(0, pos);
+      std::string fracVal = convertedVal.substr(pos + 1);
+
+      std::cout << "baseVal: " << baseVal << std::endl;
+      std::cout << "fracVal: " << fracVal << std::endl;
+
+      int baseValInt = stoi(baseVal);
+      std::cout << "baseValInt: " << baseValInt << std::endl;
+      int fracValInt = stoi(fracVal);
       // After initializing an array, we devide the user input by 2 and add it
       // to an array of binArr. The remainder is stored, then the user input is
       // divided by 2 until the convertedVal equals 0.
-      while (convertedDblVal > 0) {
-        binArr[i] = convertedDblVal % 2;
-        convertedDblVal /= 2;
+      while (baseValInt > 0) {
+        binArr[i] = baseValInt % 2;
+        baseValInt /= 2;
         i++;
       }
 
-      // Stores the values calcualted from the while loop in reverse order.
+      // Stores the values calculated from the while loop in reverse order.
       for (int j = i - 1; j >= 0; j--) {
         binVal += std::to_string(binArr[j]);
       }
 
-      return binVal;
+      if (fracValInt == 0) {
+        std::cout << "fracValInt equals zero! Not dividing.\n";
+        fracVal = ' ';
+      } else {
+        while (fracValInt > '0') {
+          std::cout << "fracValInt does NOT equal zero! Dividing...\n";
+          fracArr[i] = fracValInt % 2;
+          fracValInt /= 2;
+          i++;
+        }
+        for (int j = i - 1; j >= 0; j--) {
+          fracVal += std::to_string(fracArr[j]);
+        }
+      }
+
+      std::string finalVal;
+      if (fracVal == " ") {
+        finalVal = binVal;
+      } else {
+        finalVal = binVal + '.' + fracVal;
+      }
+      return finalVal;
     }
 
     // Hex has the same initial logic as previous functions.

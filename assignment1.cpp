@@ -147,8 +147,11 @@ std::string standardizeUserNum(const std::string &numType,
 std::string convertNumType(const std::string &numType,
                            const std::string &convertType,
                            std::string &userNum) {
+
   std::string convertedVal = standardizeUserNum(numType, userNum);
-  int convertedDblVal = std::stoi(convertedVal);
+  int convertedIntVal = std::stoi(convertedVal);
+  double convertedDblVal = std::stod(convertedVal);
+
   // Decimals are not converted and instead returned in-place.
   if (convertType == "D" || convertType == "DEC") {
     return convertedVal;
@@ -157,27 +160,30 @@ std::string convertNumType(const std::string &numType,
   } else if (convertType == "B" || convertType == "BIN") {
     if (numType == "B" || numType == "BIN") {
       return userNum;
-    } else if (convertedDblVal == 0) {
+    } else if (convertedDblVal == 0.0) {
       return std::to_string(0);
     } else {
       std::string binVal;
       int binArr[32];
       int fracArr[32];
+      double fracValInt;
       int i = 0;
       int k = 0;
 
       // Separate everything before and after the decimal
       size_t pos = convertedVal.find('.');
       std::string baseVal = convertedVal.substr(0, pos);
-      std::string fracVal = "0." + convertedVal.substr(pos + 1);
+      std::string fracVal;
 
-      std::cout << "baseVal: " << baseVal << std::endl;
-      std::cout << "fracVal: " << fracVal << std::endl;
+      if (pos == std::string::npos) {
+        fracVal = "";
+        fracValInt = 0;
+      } else {
+        fracVal = "0." + convertedVal.substr(pos + 1);
+        fracValInt = std::stod(fracVal);
+      }
 
-      int baseValInt = stoi(baseVal);
-      std::cout << "baseValInt: " << baseValInt << std::endl;
-      double fracValInt = stod(fracVal);
-      std::cout << "fracValInt is " << fracValInt << std::endl;
+      int baseValInt = std::stoi(baseVal);
       // After initializing an array, we divide the user input by 2 and add it
       // to an array of binArr. The remainder is stored, then the user input is
       // divided by 2 until the convertedVal equals 0.
@@ -188,8 +194,12 @@ std::string convertNumType(const std::string &numType,
       }
 
       // Stores the values calculated from the while loop in reverse order.
-      for (int j = i - 1; j >= 0; j--) {
-        binVal += std::to_string(binArr[j]);
+      if (binVal.empty()) {
+        binVal = "0";
+      } else {
+        for (int j = i - 1; j >= 0; j--) {
+          binVal += std::to_string(binArr[j]);
+        }
       }
 
       if (fracValInt == 0) {
@@ -225,7 +235,7 @@ std::string convertNumType(const std::string &numType,
   } else if (convertType == "H" || convertType == "HEX") {
     if (numType == "H" || numType == "HEX") {
       return userNum;
-    } else if (convertedDblVal == 0) {
+    } else if (convertedIntVal == 0) {
       return std::to_string(0);
     } else {
       char hexDecVal[100];
@@ -240,8 +250,8 @@ std::string convertNumType(const std::string &numType,
       // added to 0 to get the second value. Since these values are in reverse
       // order, though, a for-loop exists at the end to reverse the values (9C),
       // then return them.
-      while (convertedDblVal != 0) {
-        int rem = convertedDblVal % 16;
+      while (convertedIntVal != 0) {
+        int rem = convertedIntVal % 16;
 
         if (rem < 10) {
           hexDecVal[i] = '0' + rem;
@@ -249,7 +259,7 @@ std::string convertNumType(const std::string &numType,
           hexDecVal[i] = 'A' + (rem - 10);
         }
         i++;
-        convertedDblVal /= 16;
+        convertedIntVal /= 16;
       }
 
       for (int j = i - 1; j >= 0; j--) {

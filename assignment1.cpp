@@ -10,17 +10,15 @@
 // convertToBin, etc.) that did checks for the user's input type, but realized
 // that I'd be writing four near-identical if-else statements. This felt like
 // the cleaner route. I'm not sure if it was.
-
-// TO DO:
-// Float Functionality (Float to Binary)
+//
+// I did NOT do the bonus.
 
 #include <algorithm>
 #include <iostream>
 #include <string>
 
 void helpDoc();
-double standardizeUserNum(const std::string &, const std::string &,
-                          std::string &);
+std::string standardizeUserNum(const std::string &, std::string &);
 std::string convertNumType(const std::string &, const std::string &,
                            std::string &);
 
@@ -30,9 +28,9 @@ int main() {
     std::string userNum;
 
     std::cout << "-------------------------------------------------------\n"
-              << "This program takes a value (Decimal/Binary/Hex/Float) and\n"
+              << "This program takes a value (Decimal/Binary/Hex) and\n"
               << "converts it to another value type of the user's choice.\n"
-              << "For help, type \"help\" in any input box. 'x' to quit.\n"
+              << "For help, type \"help\". Type \"x\" to quit.\n"
               << "-------------------------------------------------------\n";
 
     while (true) {
@@ -53,10 +51,17 @@ int main() {
                            ::toupper);
         }
 
-        std::cout << "Enter the type of number you will be converting to: ";
-        std::getline(std::cin, convertType);
-        std::transform(convertType.begin(), convertType.end(),
-                       convertType.begin(), ::toupper);
+        if (userNum == "X") {
+            break;
+        } else if (userNum == "HELP") {
+            helpDoc();
+            continue;
+        } else {
+            std::cout << "Enter the type of number you will be converting to: ";
+            std::getline(std::cin, convertType);
+            std::transform(convertType.begin(), convertType.end(),
+                           convertType.begin(), ::toupper);
+        }
 
         std::cout << "Converted Number: "
                   << convertNumType(numType, convertType, userNum) << std::endl;
@@ -158,6 +163,7 @@ std::string convertNumType(const std::string &numType,
         return convertedVal;
         // Binary conversion. If Binary -> Binary or equal to 0, then it is not
         // converted and instead returned directly from user input.
+        // Additional logic to handle floats bloated this up pretty fast.
     } else if (convertType == "B" || convertType == "BIN") {
         if (numType == "B" || numType == "BIN") {
             return userNum;
@@ -171,11 +177,21 @@ std::string convertNumType(const std::string &numType,
             int i = 0;
             int k = 0;
 
-            // Separate everything before and after the decimal
+            // I'm first separating everything before and after the decimal
+            // using find(). It just pulls everything before and after the
+            // period and separates it so I can use it later.
             size_t pos = convertedVal.find('.');
             std::string baseVal = convertedVal.substr(0, pos);
             std::string fracVal;
 
+            // If the string in fracVal is blank after find(), I set
+            // it to a blank so it's easier to handle and doesn't fill up with
+            // noise. Otherwise, I'll set it to a string of the fraction
+            // (prepending with "0." since these are technically just strings)
+            // and then convert it to a double and store it in its own variable.
+            // This is probably way messier than it needs to be, but making
+            // everything a string was the only idea I had at the time so that I
+            // could account for hex values.
             if (pos == std::string::npos) {
                 fracVal = "";
                 fracValInt = 0;
@@ -184,6 +200,9 @@ std::string convertNumType(const std::string &numType,
                 fracValInt = std::stod(fracVal);
             }
 
+            // If the base value (x.0) is empty, it gets set to 0. Otherwise,
+            // it'll freak out later on when it can't find a value in
+            // baseValInt.
             int baseValInt = baseVal.empty() ? 0 : std::stoi(baseVal);
             // After initializing an array, we divide the user input by 2 and
             // add it to an array of binArr. The remainder is stored, then the
@@ -200,6 +219,9 @@ std::string convertNumType(const std::string &numType,
                 binVal += std::to_string(binArr[j]);
             }
 
+            // Stores the value from the fractional part of a binary conversion.
+            // First checks to see if there's a fraction. If not, then it fills
+            // a blank space.
             if (fracValInt == 0) {
                 fracVal = " ";
             } else {
@@ -214,12 +236,19 @@ std::string convertNumType(const std::string &numType,
                     k++;
                 }
 
+                // fracVal is cleared here before being converted to a string
+                // because it was used early on to store the decimal fraction.
+                // It has a new job here to output the binary conversion.
                 fracVal.clear();
                 for (int j = 0; j < k; j++) {
                     fracVal += std::to_string(fracArr[j]);
                 }
             }
 
+            // Since everything is a string, everything is just concatenated
+            // back together at the end with a period slapped in the middle.
+            // I considered changing the format to a base 2 scientific notation,
+            // but I didn't know if it'd be outside the scope of the assignment.
             std::string finalVal;
             if (fracVal == " ") {
                 finalVal = binVal;
@@ -238,6 +267,8 @@ std::string convertNumType(const std::string &numType,
             fracVal = "0";
         }
 
+        // Various preliminary handlers for edge cases before hex conversion
+        // logic.
         if (numType == "H" || numType == "HEX") {
             return userNum;
         } else if (convertedIntVal == 0) {

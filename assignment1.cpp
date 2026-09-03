@@ -164,19 +164,21 @@ std::string convertNumType(const std::string &numType,
       int binArr[32];
       int fracArr[32];
       int i = 0;
+      int k = 0;
 
       // Separate everything before and after the decimal
       size_t pos = convertedVal.find('.');
       std::string baseVal = convertedVal.substr(0, pos);
-      std::string fracVal = convertedVal.substr(pos + 1);
+      std::string fracVal = "0." + convertedVal.substr(pos + 1);
 
       std::cout << "baseVal: " << baseVal << std::endl;
       std::cout << "fracVal: " << fracVal << std::endl;
 
       int baseValInt = stoi(baseVal);
       std::cout << "baseValInt: " << baseValInt << std::endl;
-      int fracValInt = stoi(fracVal);
-      // After initializing an array, we devide the user input by 2 and add it
+      double fracValInt = stod(fracVal);
+      std::cout << "fracValInt is " << fracValInt << std::endl;
+      // After initializing an array, we divide the user input by 2 and add it
       // to an array of binArr. The remainder is stored, then the user input is
       // divided by 2 until the convertedVal equals 0.
       while (baseValInt > 0) {
@@ -191,16 +193,21 @@ std::string convertNumType(const std::string &numType,
       }
 
       if (fracValInt == 0) {
-        std::cout << "fracValInt equals zero! Not dividing.\n";
-        fracVal = ' ';
+        fracVal = " ";
       } else {
-        while (fracValInt > '0') {
-          std::cout << "fracValInt does NOT equal zero! Dividing...\n";
-          fracArr[i] = fracValInt % 2;
-          fracValInt /= 2;
-          i++;
+        while (fracValInt != 0 && k < 16) {
+          fracValInt *= 2.0;
+          if (fracValInt >= 1) {
+            fracArr[k] = 1;
+            fracValInt -= 1;
+          } else {
+            fracArr[k] = 0;
+          }
+          k++;
         }
-        for (int j = i - 1; j >= 0; j--) {
+
+        fracVal.clear();
+        for (int j = 0; j < k; j++) {
           fracVal += std::to_string(fracArr[j]);
         }
       }
